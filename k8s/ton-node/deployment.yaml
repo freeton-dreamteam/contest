@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freeton-node-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: freeton-node-1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: freeton-node-1
+    spec:
+      nodeName: ton-k8s1
+      initContainers:
+        - name: volum-permission
+          image: alpine
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: freeton-node-1-persistent-storage
+              mountPath: /var/ton-work
+          command:
+            - sh
+            - -c
+            - (chmod 0770 /var/ton-work; chgrp 1000 /var/ton-work)
+      containers:
+        - image: freetondreamteam/ton-node:0.2.7
+          name: freeton-node
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          env:
+            - name: EXTERNAL_IP
+              value: '134.209.250.33'
+            - name: TON_SRC_DIR
+              value: '/home/ton/net.ton.dev/ton'
+            - name: TON_BUILD_DIR
+              value: '/home/ton/net.ton.dev/ton/build'
+            - name: TON_WORK_DIR
+              value: '/var/ton-work'
+            - name: UTILS_DIR
+              value: '/home/ton/net.ton.dev/ton/build/utils'
+            - name: SCRIPTS_DIR
+              value: '/home/ton/net.ton.dev/scripts'
+            - name: KEYS_DIR
+              value: '/var/ton-work/keys'
+            - name: CONFIGS_DIR
+              value: '/home/ton/net.ton.dev/configs'
+            - name: ADNL_PORT
+              value: '30310'
+            - name: HOSTNAME
+              value: 'freeton-node-1'
+            - name: VALIDATOR_NAME
+              value: 'freeton-node-1'
+          ports:
+            - name: freeton-console
+              containerPort: 3030
+            - name: freeton-lite
+              containerPort: 3031
+            - name: net
+              containerPort: 30310
+              protocol: UDP
+          resources:
+            limits:
+              memory: 11Gi
+              cpu: 3
+            requests:
+              cpu: 3
+              memory: 11Gi
+          volumeMounts:
+            - name: freeton-node-1-persistent-storage
+              mountPath: /var/ton-work
+          command:
+            - bash
+            - '-c'
+            - |
+              if [ ! -f "${TON_WORK_DIR}/etc/ton-global.config.json" ]; then
+                echo "Setup TON node"
+                ./setup-in-k8s.sh
+              fi
+              echo "Starting TON node"
+              "${TON_BUILD_DIR}/validator-engine/validator-engine" -C "${TON_WORK_DIR}/etc/ton-global.config.json" --db "${TON_WORK_DIR}/db" > "${TON_WORK_DIR}/node.log" 2>&1
+      volumes:
+        - name: freeton-node-1-persistent-storage
+          persistentVolumeClaim:
+            claimName: freeton-node-1-pv-claim
