@@ -16,7 +16,7 @@ spec:
     spec:
       nodeName: ton-k8s1
       initContainers:
-        - name: volum-permission
+        - name: volume-permission
           image: alpine
           securityContext:
             runAsUser: 0
