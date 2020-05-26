@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: election
+spec:
+#  schedule: "*/1 * * * *"
+#  successfulJobsHistoryLimit: 1
+#  failedJobsHistoryLimit: 1
+#  jobTemplate:
+#    spec:
+#      parallelism: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: freeton-node
+              image: freetondreamteam/ton-node:0.3.1
+              securityContext:
+                runAsUser: 0
+              env:
+                - name: UTILS_DIR
+                  value: '/home/ton/net.ton.dev/ton/build/utils'
+                - name: SCRIPTS_DIR
+                  value: '/home/ton/net.ton.dev/scripts'
+                - name: CONFIGS_DIR
+                  value: '/home/ton/net.ton.dev/configs'
+                - name: TON_BUILD_DIR
+                  value: '/home/ton/net.ton.dev/ton/build'
+                - name: STAKE
+                  value: '10001'
+                - name: REQ_CONFIRMS
+                  value: '2'
+                - name: VALIDATOR_NAME
+                  value: 'validator'
+                - name: ELECTIONS_WORK_DIR
+                  value: '/var/ton/election'
+                - name: TON_SRC_DIR
+                  value: '/home/ton/net.ton.dev/ton'
+                - name: MSIG_ADDR
+                  value: '-1:46d608a9672c2bec8bd1ee0d2eaa4ce4bb1686af70267eaaf3440ac68577aefc'
+              volumeMounts:
+                - name: election-persistent-storage
+                  mountPath: /var/ton/election
+                - name: freeton-node-1-keys
+                  mountPath: /var/ton/keys/freeton-node-1
+                - name: freeton-node-2-keys
+                  mountPath: /var/ton/keys/freeton-node-2
+                - name: freeton-node-3-keys
+                  mountPath: /var/ton/keys/freeton-node-3
+              command:
+                - bash
+                - '-c'
+                - |
+                  NODES_NUMBER=$(echo /var/ton/keys/*/ | wc -w)
+                  if [ $NODES_NUMBER -lt $REQ_CONFIRMS  ]; then
+                      >&2 echo "NODES_NUMBER(${NODES_NUMBER}) doesn't satisfy REQ_CONFIRMS(${REQ_CONFIRMS})"
+                      exit 1
+                  fi
+
+                   # @TODO handling inaccessible nodes
+                  export INITIATOR_KEYS_DIR=$(echo /var/ton/keys/*/ | cut -d ' ' -f 1 | sed 's/.$//')
+                  export INITIATOR_HOSTNAME=$(cat ${INITIATOR_KEYS_DIR}/hostname)
+                  echo "Initiator hostname: ${INITIATOR_HOSTNAME}"
+                  ./validator-msig-in-k8s.sh
+                  /bin/sleep infinity
+                  if [ $REQ_CONFIRMS -gt 1 ]; then
+                      for (( i=2; i<=$REQ_CONFIRMS; i++))
+                          do
+                              export CONFIRMATOR_KEYS_DIR=$(echo /var/ton/keys/*/ | cut -d ' ' -f $i | sed 's/.$//')
+                              export CONFIRMATOR_HOSTNAME=$(cat ${CONFIRMATOR_KEYS_DIR}/hostname)
+                              echo "Confirmator hostname: $CONFIRMATOR_HOSTNAME"
+                              ./confirmator-msig-in-k8s.sh
+                      done
+                  fi
+          volumes:
+            - name: election-persistent-storage
+              persistentVolumeClaim:
+                claimName: election-pv-claim
+            - name: freeton-node-1-keys
+              secret:
+                secretName: freeton-node-1-keys
+            - name: freeton-node-2-keys
+              secret:
+                secretName: freeton-node-2-keys
+            - name: freeton-node-3-keys
+              secret:
+                secretName: freeton-node-3-keys

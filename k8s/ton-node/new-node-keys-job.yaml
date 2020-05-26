@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: new-node-keys
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: freeton-node
+          image: freetondreamteam/ton-node:0.3.1
+          securityContext:
+            runAsUser: 0
+          env:
+            - name: UTILS_DIR
+              value: '/home/ton/net.ton.dev/ton/build/utils'
+            - name: KEYS_DIR
+              value: '/var/new-node-keys'
+            - name: SCRIPTS_DIR
+              value: '/home/ton/net.ton.dev/scripts'
+            - name: CONFIGS_DIR
+              value: '/home/ton/net.ton.dev/configs'
+            - name: HOSTNAME
+              value: 'freeton-node-3-internal'
+          volumeMounts:
+            - name: new-node-keys-persistent-storage
+              mountPath: /var/new-node-keys
+          command:
+            - bash
+            - '-c'
+            - |
+              cd ${KEYS_DIR}
+              rm -rf ./*
+              "${UTILS_DIR}/generate-random-id" -m keys -n server > "${KEYS_DIR}/keys_s"
+              "${UTILS_DIR}/generate-random-id" -m keys -n liteserver > "${KEYS_DIR}/keys_l"
+              "${UTILS_DIR}/generate-random-id" -m keys -n client > "${KEYS_DIR}/keys_c"
+              TONOS_CLI_OUTPUT=$("${UTILS_DIR}/tonos-cli" genaddr "${CONFIGS_DIR}/SafeMultisigWallet.tvc" \
+                  "${CONFIGS_DIR}/SafeMultisigWallet.abi.json" --genkey "${KEYS_DIR}/msig.keys.json" --wc -1)
+              RAW_ADDRESS=$(echo "${TONOS_CLI_OUTPUT}" | grep "Raw address" | cut -d ' ' -f 3)
+              SEED_PHRASE=$(echo "${TONOS_CLI_OUTPUT}" | grep "Seed phrase" | sed -e 's/Seed phrase: //' | tr -d '"')
+              PUB_KEY=$("${UTILS_DIR}/tonos-cli" genpubkey "${SEED_PHRASE}" | grep "Public key:" | cut -d' ' -f3-)
+              echo $RAW_ADDRESS > "${KEYS_DIR}/validator.addr"
+              echo $SEED_PHRASE > "${KEYS_DIR}/seed"
+              echo $PUB_KEY > "${KEYS_DIR}/public.key"
+              echo ${HOSTNAME} > "${KEYS_DIR}/hostname"
+      volumes:
+        - name: new-node-keys-persistent-storage
+          persistentVolumeClaim:
+            claimName: new-node-keys-pv-claim

@@ -1,26 +1,53 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: freeton-node-1-pv-volume
+  name: new-node-keys-pv-volume
   labels:
     type: local
 spec:
   storageClassName: manual
   capacity:
-    storage: 100Gi
+    storage: 100Mi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/freeton-node-1-pv-volume"
+    path: "/mnt/new-node-keys"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: freeton-node-1-pv-claim
+  name: new-node-keys-pv-claim
 spec:
   storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: election-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/election"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: election-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
