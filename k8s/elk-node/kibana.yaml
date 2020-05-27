@@ -6,16 +6,13 @@ metadata:
   labels:
     app: kibana
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  externalIPs:
-    - 134.209.250.33
+  selector:
+    app: kibana
+  type: ClusterIP
   ports:
     - port: 5601
       protocol: TCP
       targetPort: 5601
-  selector:
-    app: kibana
 ---
 apiVersion: apps/v1
 kind: Deployment
