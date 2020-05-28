@@ -1,0 +1,51 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: metric
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: metric
+  labels:
+    app: grafana
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  externalIPs:
+    - 134.209.242.26
+  ports:
+    - port: 9999
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: grafana
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: metric
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: docker.io/grafana/grafana:7.0.0-beta3
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
+          ports:
+            - containerPort: 3000
