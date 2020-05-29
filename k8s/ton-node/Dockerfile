@@ -32,4 +32,3 @@ RUN cat /dev/null > ./env.sh
 COPY ./ton-node/setup-in-k8s.sh /home/ton/net.ton.dev/scripts/setup-in-k8s.sh
 COPY ./ton-node/validator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/validator-msig-in-k8s.sh
 COPY ./ton-node/confirmator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/confirmator-msig-in-k8s.sh
-

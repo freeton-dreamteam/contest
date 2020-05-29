@@ -59,9 +59,9 @@ if [ "$election_id" == "0" ]; then
                 "{\"dest\":\"${elector_addr}\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"${recover_query_boc}\"}" \
                 --abi "${CONFIGS_DIR}/SafeMultisigWallet.abi.json" \
                 --sign "${INITIATOR_KEYS_DIR}/msig.keys.json"; then
-                echo "INFO: tonos-cli submitTransaction attempt #${i}... FAIL"
+                echo "INFO: tonos-cli submitRecoverTransaction attempt #${i}... FAIL"
             else
-                echo "INFO: tonos-cli submitTransaction attempt #${i}... PASS"
+                echo "INFO: tonos-cli submitRecoverTransaction attempt #${i}... PASS"
                 break
             fi
         done
@@ -191,9 +191,9 @@ for i in $(seq ${TONOS_CLI_SEND_ATTEMPTS}); do
         "{\"dest\":\"${elector_addr}\",\"value\":\"${NANOSTAKE}\",\"bounce\":true,\"allBalance\":false,\"payload\":\"${validator_query_boc}\"}" \
         --abi "${CONFIGS_DIR}/SafeMultisigWallet.abi.json" \
         --sign "${INITIATOR_KEYS_DIR}/msig.keys.json"; then
-        echo "INFO: tonos-cli submitTransaction attempt #${i}... FAIL"
+        echo "INFO: tonos-cli submitElectionTransaction attempt #${i}... FAIL"
     else
-        echo "INFO: tonos-cli submitTransaction attempt #${i}... PASS"
+        echo "INFO: tonos-cli submitElectionTransaction attempt #${i}... PASS"
         break
     fi
 done
