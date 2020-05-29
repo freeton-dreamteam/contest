@@ -5,7 +5,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  externalIPs: [134.209.250.33]
+  externalIPs: [_PUBLIC_IP_]
   ports:
     - port: 30310
       protocol: UDP

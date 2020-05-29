@@ -14,13 +14,25 @@ spec:
       labels:
         app: freeton-node-1
     spec:
-      nodeName: ton-k8s1
+      nodeName: ton-k8s-1
+      initContainers:
+        - name: volume-permission
+          image: alpine
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: freeton-node-1-persistent-storage
+              mountPath: /var/ton-work
+          command:
+            - sh
+            - -c
+            - (chmod 0770 /var/ton-work; chgrp 1000 /var/ton-work)
       containers:
         - image: freetondreamteam/ton-node:0.3.1
           name: freeton-node
           env:
             - name: EXTERNAL_IP
-              value: '134.209.250.33'
+              value: '134.209.242.26'
             - name: TON_SRC_DIR
               value: '/home/ton/net.ton.dev/ton'
             - name: TON_BUILD_DIR

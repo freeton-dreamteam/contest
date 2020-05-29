@@ -22,3 +22,14 @@ RUN cat /dev/null > ./env.sh
 COPY setup-in-k8s.sh /home/ton/net.ton.dev/scripts/setup-in-k8s.sh
 COPY validator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/validator-msig-in-k8s.sh
 COPY confirmator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/confirmator-msig-in-k8s.sh
+
+
+RUN dnf -y install epel-release
+RUN dnf -y install logrotate cronie htop
+RUN rpm -i http://repo.zabbix.com/zabbix/5.0/rhel/8/x86_64/zabbix-agent2-5.0.1-1.el8.x86_64.rpm
+COPY ./../zabbix/zabbix_agent2.conf /etc/zabbix/zabbix_agent2.conf
+COPY ./../zabbix/etc/zabbix/* /etc/zabbix/
+COPY ./../zabbix/do.sh /home/ton
+COPY ./../zabbix/cron /home/ton
+RUN mkdir /var/lib/ton-metrics
+RUN chown `ton`:`ton` /var/lib/ton-metrics

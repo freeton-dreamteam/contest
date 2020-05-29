@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 30Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/mysql-pv-volume"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      nodeName: ton-k8s-0
+      containers:
+        - name: mariadb
+          image: mariadb:10.5.3
+          ports: [{containerPort: 3306}]
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: 'root'
+            - name: MYSQL_DATABASE
+              value: 'zabbix'
+            - name: MYSQL_USER
+              value: 'zabbix'
+            - name: MYSQL_PASSWORD
+              value: 'zabbix'
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+    - name: freeton-console
+      port: 3306
+      protocol: TCP
+      targetPort: 3306
+  selector:
+    app: mysql

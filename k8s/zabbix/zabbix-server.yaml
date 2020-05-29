@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zabbix-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zabbix-server
+  template:
+    metadata:
+      labels:
+        app: zabbix-server
+    spec:
+      nodeName: ton-k8s-0
+      containers:
+        - name: zabbix-server
+          image: zabbix/zabbix-server-mysql:centos-5.0-latest
+          ports: [{containerPort: 8080}]
+          env:
+            - name: DB_SERVER_HOST
+              value: 'mysql'
+            - name: MYSQL_USER
+              value: 'zabbix'
+            - name: MYSQL_PASSWORD
+              value: 'zabbix'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zabbix-server
+spec:
+  ports:
+    - name: server
+      port: 10051
+      protocol: TCP
+      targetPort: 10051
+  selector:
+    app: zabbix-server

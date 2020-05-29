@@ -1,20 +1,21 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: batch/v1beta1
+kind: CronJob
 metadata:
   name: election
 spec:
-#  schedule: "*/1 * * * *"
-#  successfulJobsHistoryLimit: 1
-#  failedJobsHistoryLimit: 1
-#  jobTemplate:
-#    spec:
-#      parallelism: 1
+  schedule: "*/10 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      parallelism: 1
       template:
         spec:
           restartPolicy: Never
           containers:
             - name: freeton-node
-              image: freetondreamteam/ton-node:0.3.1
+              image: freetondreamteam/ton-node:0.3.4
+              stdin: true
               securityContext:
                 runAsUser: 0
               env:
@@ -48,7 +49,7 @@ spec:
                 - name: freeton-node-3-keys
                   mountPath: /var/ton/keys/freeton-node-3
               command:
-                - bash
+                - /bin/bash
                 - '-c'
                 - |
                   NODES_NUMBER=$(echo /var/ton/keys/*/ | wc -w)
@@ -62,7 +63,9 @@ spec:
                   export INITIATOR_HOSTNAME=$(cat ${INITIATOR_KEYS_DIR}/hostname)
                   echo "Initiator hostname: ${INITIATOR_HOSTNAME}"
                   ./validator-msig-in-k8s.sh
-                  /bin/sleep infinity
+
+                  echo "===========================";
+                  echo "Req confirms: ${REQ_CONFIRMS}";
                   if [ $REQ_CONFIRMS -gt 1 ]; then
                       for (( i=2; i<=$REQ_CONFIRMS; i++))
                           do
