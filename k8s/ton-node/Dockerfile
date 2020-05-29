@@ -12,10 +12,11 @@ RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/* /bin/
 RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/* /lib64/ -r
 RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib /lib/ -r
 
+RUN useradd ton
+
 RUN mkdir /var/lib/ton-metrics
 RUN chown -R ton:ton /var/lib/ton-metrics /var/run/zabbix /var/log/zabbix /etc/zabbix
 
-RUN useradd ton
 USER ton
 WORKDIR /home/ton
 RUN git clone https://github.com/tonlabs/net.ton.dev.git
