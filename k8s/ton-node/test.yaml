@@ -16,7 +16,7 @@ spec:
     spec:
       nodeName: ton-k8s-1
       containers:
-        - image: freetondreamteam/ton-node:0.3.1
+        - image: freetondreamteam/ton-node:0.4
           name: freeton-node
           securityContext:
             runAsUser: 0
@@ -27,7 +27,6 @@ spec:
             - bash
             - '-c'
             - |
+              /usr/bin/crontab /home/ton/cron && crond -n &
               /usr/sbin/zabbix_agent2 &
-              dnf install logrotate -y
-              rpm -i http://repo.zabbix.com/zabbix/5.0/rhel/8/x86_64/zabbix-agent2-5.0.1-1.el8.x86_64.rpm
               /bin/sleep infinity

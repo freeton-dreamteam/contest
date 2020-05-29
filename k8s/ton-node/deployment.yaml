@@ -28,7 +28,7 @@ spec:
             - -c
             - (chmod 0770 /var/ton-work; chgrp 1000 /var/ton-work)
       containers:
-        - image: freetondreamteam/ton-node:0.3.1
+        - image: freetondreamteam/ton-node:0.4
           name: freeton-node
           env:
             - name: EXTERNAL_IP
@@ -63,11 +63,11 @@ spec:
               protocol: UDP
           resources:
             limits:
-              memory: 11Gi
-              cpu: 3
+              memory: 12Gi
+              cpu: 5
             requests:
-              cpu: 3
-              memory: 11Gi
+              cpu: 5
+              memory: 12Gi
           volumeMounts:
             - name: freeton-node-1-persistent-storage
               mountPath: /var/ton-work
@@ -77,6 +77,8 @@ spec:
             - bash
             - '-c'
             - |
+              /usr/bin/crontab /home/ton/cron && crond -n &
+              /usr/sbin/zabbix_agent2 &
               if [ ! -f "${TON_WORK_DIR}/etc/ton-global.config.json" ]; then
                 echo "Setup TON node"
                 ./setup-in-k8s.sh

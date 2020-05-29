@@ -13,7 +13,7 @@ RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/* /lib64/ -
 RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib /lib/ -r
 
 RUN mkdir /var/lib/ton-metrics
-RUN chown `ton`:`ton` /var/lib/ton-metrics
+RUN chown -R `ton`:`ton` /var/lib/ton-metrics /var/run/zabbix/ /var/log/zabbix /etc/zabbix
 
 RUN useradd ton
 USER ton
@@ -22,13 +22,12 @@ RUN git clone https://github.com/tonlabs/net.ton.dev.git
 WORKDIR /home/ton/net.ton.dev/scripts
 RUN . ./env.sh
 RUN ./build.sh
-RUN cat /dev/null > ./ton-node/env.sh
+RUN cat /dev/null > ./env.sh
 
 COPY ./ton-node/setup-in-k8s.sh /home/ton/net.ton.dev/scripts/setup-in-k8s.sh
 COPY ./ton-node/validator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/validator-msig-in-k8s.sh
 COPY ./ton-node/confirmator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/confirmator-msig-in-k8s.sh
 
-COPY ./zabbix/zabbix_agent2.conf /etc/zabbix/zabbix_agent2.conf
-COPY ./zabbix/etc/zabbix/* /etc/zabbix/
+COPY ./zabbix/etc/zabbix /etc/zabbix
 COPY ./zabbix/do.sh /home/ton
 COPY ./zabbix/cron /home/ton
