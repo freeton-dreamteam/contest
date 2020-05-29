@@ -54,9 +54,12 @@ spec:
                 - |
                   NODES_NUMBER=$(echo /var/ton/keys/*/ | wc -w)
                   if [ $NODES_NUMBER -lt $REQ_CONFIRMS  ]; then
-                      >&2 echo "NODES_NUMBER(${NODES_NUMBER}) doesn't satisfy REQ_CONFIRMS(${REQ_CONFIRMS})"
+                      >&2 echo "$(date) [ERROR]: NODES_NUMBER(${NODES_NUMBER}) doesn't satisfy REQ_CONFIRMS(${REQ_CONFIRMS})"
                       exit 1
                   fi
+
+                  export IS_ELECTION_GOING=-1
+                  export IS_
 
                    # @TODO handling inaccessible nodes
                   export INITIATOR_KEYS_DIR=$(echo /var/ton/keys/*/ | cut -d ' ' -f 1 | sed 's/.$//')

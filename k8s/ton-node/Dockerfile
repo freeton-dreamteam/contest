@@ -15,6 +15,9 @@ RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib /li
 RUN useradd ton
 
 RUN mkdir /var/lib/ton-metrics
+COPY ./zabbix/etc/zabbix /etc/zabbix
+COPY ./zabbix/do.sh /home/ton
+COPY ./zabbix/cron /home/ton
 RUN chown -R ton:ton /var/lib/ton-metrics /var/run/zabbix /var/log/zabbix /etc/zabbix
 
 USER ton
@@ -29,6 +32,3 @@ COPY ./ton-node/setup-in-k8s.sh /home/ton/net.ton.dev/scripts/setup-in-k8s.sh
 COPY ./ton-node/validator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/validator-msig-in-k8s.sh
 COPY ./ton-node/confirmator-msig-in-k8s.sh /home/ton/net.ton.dev/scripts/confirmator-msig-in-k8s.sh
 
-COPY ./zabbix/etc/zabbix /etc/zabbix
-COPY ./zabbix/do.sh /home/ton
-COPY ./zabbix/cron /home/ton
