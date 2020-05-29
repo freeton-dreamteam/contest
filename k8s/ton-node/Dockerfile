@@ -14,12 +14,12 @@ RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib /li
 
 RUN useradd ton
 
-RUN mkdir /var/lib/ton-metrics
-RUN mkdir /var/run/cron
+RUN mkdir /var/lib/ton-metrics /var/run/cron
 COPY ./zabbix/etc/zabbix /etc/zabbix
 COPY ./zabbix/do.sh /home/ton
 COPY ./zabbix/cron /home/ton
 RUN chown -R ton:ton /var/lib/ton-metrics /var/run/zabbix /var/log/zabbix /etc/zabbix /var/run/cron
+RUN chmod gu+s /usr/sbin/crond
 
 USER ton
 WORKDIR /home/ton
