@@ -58,26 +58,25 @@ spec:
                       exit 1
                   fi
 
-                  export IS_ELECTION_GOING=-1
-                  export IS_
-
                    # @TODO handling inaccessible nodes
                   export INITIATOR_KEYS_DIR=$(echo /var/ton/keys/*/ | cut -d ' ' -f 1 | sed 's/.$//')
                   export INITIATOR_HOSTNAME=$(cat ${INITIATOR_KEYS_DIR}/hostname)
-                  echo "Initiator hostname: ${INITIATOR_HOSTNAME}"
+                  echo "$(date) [INFO]: Initiator hostname: ${INITIATOR_HOSTNAME}"
                   ./validator-msig-in-k8s.sh
 
                   echo "===========================";
-                  echo "Req confirms: ${REQ_CONFIRMS}";
+                  echo "$(date) [INFO]: Req confirms: ${REQ_CONFIRMS}";
                   if [ $REQ_CONFIRMS -gt 1 ]; then
                       for (( i=2; i<=$REQ_CONFIRMS; i++))
                           do
                               export CONFIRMATOR_KEYS_DIR=$(echo /var/ton/keys/*/ | cut -d ' ' -f $i | sed 's/.$//')
                               export CONFIRMATOR_HOSTNAME=$(cat ${CONFIRMATOR_KEYS_DIR}/hostname)
-                              echo "Confirmator hostname: $CONFIRMATOR_HOSTNAME"
+                              echo "$(date) [INFO]: Confirmator hostname: $CONFIRMATOR_HOSTNAME"
                               ./confirmator-msig-in-k8s.sh
                       done
                   fi
+
+                  echo "$(date) [INFO]: Finish election job"
           volumes:
             - name: election-persistent-storage
               persistentVolumeClaim:

@@ -28,7 +28,7 @@ spec:
             - -c
             - (chmod 0770 /var/ton-work; chgrp 1000 /var/ton-work)
       containers:
-        - image: freetondreamteam/ton-node:0.4.2
+        - image: freetondreamteam/ton-node:0.4.3
           name: freeton-node
           env:
             - name: EXTERNAL_IP
