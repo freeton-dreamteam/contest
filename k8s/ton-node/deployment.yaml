@@ -28,7 +28,7 @@ spec:
             - -c
             - (chmod 0770 /var/ton-work; chgrp 1000 /var/ton-work)
       containers:
-        - image: freetondreamteam/ton-node:0.4.5
+        - image: freetondreamteam/ton-node:0.4.6
           name: freeton-node
           env:
             - name: EXTERNAL_IP
@@ -78,7 +78,7 @@ spec:
             - '-c'
             - |
               echo "Hostname=${HOSTNAME}" >> /etc/zabbix/zabbix_agent2.conf
-              /usr/bin/crontab /home/ton/cron && crond -n &
+              /usr/bin/crontab /home/ton/cron && /usr/sbin/crond
               /usr/sbin/zabbix_agent2 &
               if [ ! -f "${TON_WORK_DIR}/etc/ton-global.config.json" ]; then
                 echo "Setup TON node"
