@@ -13,7 +13,7 @@ RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/* /lib64/ -
 RUN cp /root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib /lib/ -r
 
 RUN mkdir /var/lib/ton-metrics
-RUN chown -R `ton`:`ton` /var/lib/ton-metrics /var/run/zabbix/ /var/log/zabbix /etc/zabbix
+RUN chown -R ton:ton /var/lib/ton-metrics /var/run/zabbix /var/log/zabbix /etc/zabbix
 
 RUN useradd ton
 USER ton
