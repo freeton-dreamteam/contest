@@ -14,7 +14,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: freeton-node
-              image: freetondreamteam/ton-node:0.4.7
+              image: freetondreamteam/ton-node:0.4.8
               stdin: true
               securityContext:
                 runAsUser: 0
