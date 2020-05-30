@@ -16,7 +16,7 @@ spec:
     spec:
       nodeName: ton-k8s-1
       containers:
-        - image: freetondreamteam/ton-node:0.4.7
+        - image: freetondreamteam/ton-node:0.4.11
           name: freeton-node
           securityContext:
             runAsUser: 0

@@ -1,3 +1,0 @@
-SHELL=/bin/bash
-MAILTO=""
-* * * * * /home/ton/do.sh
