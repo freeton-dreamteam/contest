@@ -1,7 +1,5 @@
 #!/bin/bash
 
-/home/ton/prepare-metrics.sh
-
 METRIC="$1"
 PATH="/var/lib/ton-metrics/$METRIC"
 
