@@ -201,3 +201,4 @@ done
 date +"INFO: %F %T prepared for elections"
 
 echo "INFO: $(basename "$0") END $(date +%s) / $(date)"
+
