@@ -1,8 +1,3 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: metric
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,8 +8,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  externalIPs:
-    - 134.209.242.26
+  externalIPs: [_PUBLIC_IP_]
   ports:
     - port: 9999
       protocol: TCP
