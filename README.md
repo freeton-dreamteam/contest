@@ -40,11 +40,18 @@ It will be easier when we will prepare the Helm.
 How to monitor it look at the following paragraphs.
 
 ## 2. Intellectual log dashboard with analytics
+
 ## 3. Extended metrics for node monitoring
 We use Zabbix to collect and handle metrics and to notificate us about problems.  
 We collect common metric such as memory, cpu utilization, storage, network load. And we prepared custom template with custom freeton metrics like time diff and balance. You can see it here: https://github.com/freeton-dreamteam/contest/blob/master/k8s/zabbix/template.xml
 ![zabbix](https://github.com/freeton-dreamteam/contest/blob/master/gallery/zabbix.png?raw=true)
-Zabbix immediately notify us about any problems through telegram:
+Zabbix immediately notify us about any problems through telegram:  
 ![zabbix-notification](https://github.com/freeton-dreamteam/contest/blob/master/gallery/zabbix-notification.png?raw=true)
 
 ## 4,5. Automate participation in elections and validator script for elections
+According to schema in paragraph 1 we invented special Election k8s CronJob.  
+This CronJob have the keys for every freeton node. It is running every 10 minutes, choosing the node for create validator contract and trying to push it through node with the next script:  
+https://github.com/freeton-dreamteam/contest/blob/master/k8s/ton-node/Docker/validator-msig-in-k8s.sh  
+  
+After successful result it choosing the nodes to confirm transaction and trying to send it through every node by means of:  
+https://github.com/freeton-dreamteam/contest/blob/master/k8s/ton-node/Docker/confirmator-msig-in-k8s.sh
