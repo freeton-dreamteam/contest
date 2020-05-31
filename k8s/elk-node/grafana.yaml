@@ -8,7 +8,7 @@ metadata:
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  externalIPs: [_PUBLIC_IP_]
+  externalIPs: {%PUBLIC_IP%}
   ports:
     - port: 9999
       protocol: TCP

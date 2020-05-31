@@ -41,6 +41,7 @@ How to monitor it look at the following paragraphs.
   
 All manifests you can see here: https://github.com/freeton-dreamteam/contest/tree/master/k8s/ton-node
 ## 2. Intellectual log dashboard with analytics
+- Use the [following instructions](./docs/elk.md) to configure monitoring and notifications.
 
 ## 3. Extended metrics for node monitoring
 We use Zabbix to collect and handle metrics and to notificate us about problems.  

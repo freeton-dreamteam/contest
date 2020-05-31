@@ -4,6 +4,10 @@ Before you begin with this guide, ensure you have the following available to you
 - A Kubernetes 1.10+ cluster with role-based access control (RBAC) enabled
 - The kubectl command-line tool installed on your local machine, configured to connect to your cluster. You can read more about installing kubectl in the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/). 
 
+## Before you start
+- Open the file ./k8s/elk-node/generate-public-services.sh and fill in the required values.
+- After run the file ./k8s/elk-node/generate-public-services.sh to generate working k8s configurations.
+
 ### Step 1 — Creating a Namespace
 Before we roll out an Elasticsearch cluster, we’ll first create a Namespace into which we’ll install all of our logging instrumentation.
 
@@ -45,6 +49,14 @@ Now, roll out the DaemonSet using kubectl:
 
 ### Step 6 — Configure Kibana
 
+Now, in your web browser, visit the following URL:
+- http://{%PUBLIC_IP%}:888/
+- Login: admin
+- Password: qwerty123
+
+You can change the username and password in the file: k8s/elk-node/nginx.yaml 
+
+
 ![](./img/kibana_welcome.png)
 
 We can now check Kibana to verify that log data is being properly collected and shipped to Elasticsearch.
@@ -79,13 +91,13 @@ You should see a histogram graph and some recent log entries:
 
 ### Step 8 — Login to grafana and change default password
 
-http://_PUBLIC_IP:9999/
+http://{%PUBLIC_IP%}:9999/
 Login: admin
 Password: admin 
 
 ### Step 9 — Create default datasource
 
-Visit page http://_PUBLIC_IP:9999/datasources and click button "Add data source", then find elasticsearch. 
+Visit page http://{%PUBLIC_IP%}:9999/datasources and click button "Add data source", then find elasticsearch. 
 
 Fill the settings fields to the following:
 - URL: http://elasticsearch.elk.svc.cluster.local:9200
@@ -101,12 +113,12 @@ Fill the settings fields to the following:
 
 - Created a bot via @BotFather, got an API token
 - Created a group chat and invited the Bot to the channel.
-- Visit page http://_PUBLIC_IP:9999/alerting/notifications and click button "Add Channel".
+- Visit page http://{%PUBLIC_IP%}:9999/alerting/notifications and click button "Add Channel".
 - Fill the settings fields and click button "Save".
 
 ### Step 11 — Import grafana dashboard from json
 
-- Visit page http://_PUBLIC_IP:9999/dashboard/import, then insert json configuration from file ./k8s/elk-node/grafana/dashboard.json to field and click button "Load".
+- Visit page http://{%PUBLIC_IP%}:9999/dashboard/import, then insert json configuration from file ./k8s/elk-node/grafana/dashboard.json to field and click button "Load".
 
 ![](./img/dashboard.png)
 
