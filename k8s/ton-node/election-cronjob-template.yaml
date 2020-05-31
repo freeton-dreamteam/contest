@@ -55,9 +55,9 @@ spec:
                 - name: TON_BUILD_DIR
                   value: '/home/ton/net.ton.dev/ton/build'
                 - name: STAKE
-                  value: '10001'
+                  value: '{%STAKE%}'
                 - name: REQ_CONFIRMS
-                  value: '2'
+                  value: '{%REQ_CONFIRMS%}'
                 - name: VALIDATOR_NAME
                   value: 'validator'
                 - name: ELECTIONS_WORK_DIR
@@ -65,16 +65,10 @@ spec:
                 - name: TON_SRC_DIR
                   value: '/home/ton/net.ton.dev/ton'
                 - name: MSIG_ADDR
-                  value: '-1:46d608a9672c2bec8bd1ee0d2eaa4ce4bb1686af70267eaaf3440ac68577aefc'
+                  value: '{%MSIG_ADDR%}'
               volumeMounts:
                 - name: election-persistent-storage
-                  mountPath: /var/ton/election
-                - name: freeton-node-1-keys
-                  mountPath: /var/ton/keys/freeton-node-1
-                - name: freeton-node-2-keys
-                  mountPath: /var/ton/keys/freeton-node-2
-                - name: freeton-node-3-keys
-                  mountPath: /var/ton/keys/freeton-node-3
+                  mountPath: /var/ton/election{%VOLUME_MOUNTS%}
               command:
                 - /bin/bash
                 - '-c'
@@ -107,13 +101,4 @@ spec:
           volumes:
             - name: election-persistent-storage
               persistentVolumeClaim:
-                claimName: election-pv-claim
-            - name: freeton-node-1-keys
-              secret:
-                secretName: freeton-node-1-keys
-            - name: freeton-node-2-keys
-              secret:
-                secretName: freeton-node-2-keys
-            - name: freeton-node-3-keys
-              secret:
-                secretName: freeton-node-3-keys
+                claimName: election-pv-claim{%VOLUMES%}
