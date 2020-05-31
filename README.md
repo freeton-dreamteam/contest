@@ -4,7 +4,7 @@ Our solution of freeton infrastructure is to make it in Kubernetes.
 That's failover, easy for stretch and upgrade, monitoring, etc.  
 Look at this schema:
 ![schema](https://github.com/freeton-dreamteam/contest/blob/master/gallery/k8s-schema.jpg?raw=true)
-So, we have a freeton nodes assigned to every dedicated server.  
+So, we have a freeton nodes assigned to every dedicated server with persistent storages for database.  
 Also we have the Elections CronJob. His job is choosing nodes for initiate validator contract and for confirm it.  
 We keep all keys and secrets in k8s kubernetes and mount it to CronJob and concrete node.  
 ### Installation
