@@ -38,7 +38,8 @@ https://docs.ton.dev/86757ecb2/v/0/p/94921e-multisignature-wallet-management-in-
 In this way, we got a fully working free ton validator cluster easy to stretch and upgrade by editing manifest files.  
 It will be easier when we will prepare the Helm.  
 How to monitor it look at the following paragraphs.
-
+  
+All manifests you can see here: https://github.com/freeton-dreamteam/contest/tree/master/k8s/ton-node
 ## 2. Intellectual log dashboard with analytics
 
 ## 3. Extended metrics for node monitoring
