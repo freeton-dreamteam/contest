@@ -31,7 +31,7 @@ kubectl apply -f ./k8s/ton-node/freeton-node-{tonNodeNumber}.yaml
 ./k8s/ton-node/generate-election-cronjob.sh {nodesAmount}
 kubectl apply -f ./k8s/ton-node/election-cronjob.yaml
 ```
-4. Go inside freeton-node-1 and deploy the wallets using 
+4. Go inside freeton-node-1 and deploy the wallet using 
 https://docs.ton.dev/86757ecb2/v/0/p/94921e-multisignature-wallet-management-in-tonos-cli
 
 
