@@ -28,7 +28,7 @@ kubectl apply -f ./k8s/ton-node/freeton-node-{tonNodeNumber}.yaml
 ```
 3. Generate the Elections CronJob manifests and apply it:
 ```
-./k8s/ton-node/generate-election-cronjob.sh {nodesAmount} {msigAddr} {stake}
+./k8s/ton-node/generate-election-cronjob.sh {nodesAmount} {msigAddr} {stake} {reqConfirms}
 kubectl apply -f ./k8s/ton-node/election-cronjob.yaml
 ```
 4. Go inside freeton-node-1 and deploy the wallet using 
