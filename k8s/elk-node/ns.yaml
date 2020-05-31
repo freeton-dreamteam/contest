@@ -1,0 +1,9 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: elk
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: metric
