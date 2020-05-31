@@ -41,4 +41,10 @@ How to monitor it look at the following paragraphs.
 
 ## 2. Intellectual log dashboard with analytics
 ## 3. Extended metrics for node monitoring
+We use Zabbix to collect and handle metrics and to notificate us about problems.  
+We collect common metric such as memory, cpu utilization, storage, network load. And we prepared custom template with custom freeton metrics like time diff and balance. You can see it here: https://github.com/freeton-dreamteam/contest/blob/master/k8s/zabbix/template.xml
+![zabbix](https://github.com/freeton-dreamteam/contest/blob/master/gallery/zabbix.jpg?raw=true)
+Zabbix immediately notify us about any problems through telegram:
+![zabbix](https://github.com/freeton-dreamteam/contest/blob/master/gallery/zabbix-notification.jpg?raw=true)
+
 ## 4,5. Automate participation in elections and validator script for elections
