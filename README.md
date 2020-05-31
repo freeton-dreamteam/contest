@@ -51,6 +51,8 @@ Zabbix immediately notify us about any problems through telegram:
 
 ## 4,5. Automate participation in elections and validator script for elections
 According to schema in paragraph 1 we invented special Election k8s CronJob.  
+Manifest of this object you can see here:  
+https://github.com/freeton-dreamteam/contest/blob/master/k8s/ton-node/election-cronjob-template.yaml
 This CronJob have the keys for every freeton node. It is running every 10 minutes, choosing the node for create validator contract and trying to push it through node with the next script:  
 https://github.com/freeton-dreamteam/contest/blob/master/k8s/ton-node/Docker/validator-msig-in-k8s.sh  
   
