@@ -26,12 +26,10 @@ spec:
           command:
             - sh
             - -c
-            - (chmod 0770 /var/ton-work; chgrp 1000 /var/ton-work)
+            - (chmod 0770 /var/ton-work; chown -R 1000:1000 /var/ton-work)
       containers:
-        - image: freetondreamteam/ton-node:0.4.12
+        - image: freetondreamteam/ton-node:0.4.13
           stdin: true
-          securityContext:
-            runAsUser: 0
           name: freeton-node
           env:
             - name: EXTERNAL_IP
@@ -80,13 +78,13 @@ spec:
             - bash
             - '-c'
             - |
-              echo "Hostname=${HOSTNAME}" >> /etc/zabbix/zabbix_agent2.conf
-              /home/ton/prepare-metrics.sh &
-              /usr/sbin/zabbix_agent2 &
               if [ ! -f "${TON_WORK_DIR}/etc/ton-global.config.json" ]; then
                 echo "Setup TON node"
                 ./setup-in-k8s.sh
               fi
+              /home/ton/prepare-metrics.sh &
+              echo "Hostname=${HOSTNAME}" >> /etc/zabbix/zabbix_agent2.conf
+              /usr/sbin/zabbix_agent2 &
               echo "Starting TON node"
               "${TON_BUILD_DIR}/validator-engine/validator-engine" -C "${TON_WORK_DIR}/etc/ton-global.config.json" --db "${TON_WORK_DIR}/db"
       volumes:
