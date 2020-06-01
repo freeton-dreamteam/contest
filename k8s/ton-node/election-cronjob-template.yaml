@@ -79,7 +79,6 @@ spec:
                       exit 1
                   fi
 
-                   # @TODO handling inaccessible nodes
                   export INITIATOR_KEYS_DIR=$(echo /var/ton/keys/*/ | cut -d ' ' -f 1 | sed 's/.$//')
                   export INITIATOR_HOSTNAME=$(cat ${INITIATOR_KEYS_DIR}/hostname)
                   echo "$(date) [INFO]: Initiator hostname: ${INITIATOR_HOSTNAME}"
