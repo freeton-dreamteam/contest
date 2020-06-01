@@ -132,7 +132,7 @@ spec:
           volumeMounts:
             - name: freeton-node-{%NODE_NUMBER%}-persistent-storage
               mountPath: /var/ton-work
-            - name: freeton-node-1-keys
+            - name: freeton-node-{%NODE_NUMBER%}-keys
               mountPath: /home/ton/ton-keys
           command:
             - bash
